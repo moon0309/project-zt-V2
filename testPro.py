@@ -44,7 +44,7 @@ class Pyqt5Serial(QMainWindow, Ui_MainWindow):
         super(Pyqt5Serial, self).__init__()
         self.setupUi(self)
         self.init()
-        self.setWindowTitle("转台上位机_V2.2")
+        self.setWindowTitle("转台上位机V3.0")
         self.ser = serial.Serial()
         # self.port_check()
         # spin_icon = qtawesome.icon('fa.star', color='darkolivegreen')
@@ -147,22 +147,40 @@ class Pyqt5Serial(QMainWindow, Ui_MainWindow):
         # self.groupBox_2.plot([1, 2, 3, 4, 5], pen='r', symbol='o')
 
         # self.timer_send = QTimer()
-
         self.data1 = np.zeros(200)
-        print(self.data1)
+        # print(self.data1)
         # self.data2 = np.random.normal(size=10)
         self.data2 = np.zeros(200)
         self.data3 = np.zeros(200)
         self.data4 = np.zeros(200)
+        self.data5 = np.zeros(200)
+        self.data6 = np.zeros(200)
+        self.data7 = np.zeros(200)
+        self.data8 = np.zeros(200)
+        self.data9 = np.zeros(200)
+        self.data10 = np.zeros(200)
 
-        self.curve1 = self.plotWidget_ted_1.plot(self.data1, name="mode2")
-        self.curve2 = self.plotWidget_ted_2.plot(self.data2, name="mode3")
-        self.curve3 = self.plotWidget_ted_3.plot(self.data3, name="mode4")
-        self.curve4 = self.plotWidget_ted_4.plot(self.data4, name="mode5")
+        self.curve1 = self.plotWidget_ted_1.plot(self.data1, pen="r", name="mode1")
+        self.curve2 = self.plotWidget_ted_2.plot(self.data2, pen="r", name="mode2")
+        self.curve3 = self.plotWidget_ted_3.plot(self.data3, pen="r", name="mode3")
+        self.curve4 = self.plotWidget_ted_4.plot(self.data4, pen="r", name="mode4")
+        self.curve5 = self.plotWidget1.plot(self.data5, pen="w", name="mode5")
+        self.curve6 = self.plotWidget1.plot(self.data6, pen="g", name="mode6")
+        self.curve7 = self.plotWidget1.plot(self.data7, pen="r", name="mode7")
+        self.curve8 = self.plotWidget2.plot(self.data8, pen="w", name="mode8")
+        self.curve9 = self.plotWidget2.plot(self.data9, pen="g", name="mode9")
+        self.curve10 = self.plotWidget2.plot(self.data10, pen="r", name="mode10")
+
         self.ptr1 = 0
         self.ptr2 = 0
         self.ptr3 = 0
         self.ptr4 = 0
+        self.ptr5 = 0
+        self.ptr6 = 0
+        self.ptr7 = 0
+        self.ptr8 = 0
+        self.ptr9 = 0
+        self.ptr10 = 0
 
         # # 设定定时器
         # self.timer = pq.QtCore.QTimer()
@@ -361,7 +379,8 @@ class Pyqt5Serial(QMainWindow, Ui_MainWindow):
             # print('12345678900')
             # print(dd)
             # print(type(dd))
-
+            print('1333333333333333333333')
+            print(dealStr[59:61])
             # 校验位
             lit1 = [
                    eval('0x' + dealStr[6:8]),
@@ -381,19 +400,35 @@ class Pyqt5Serial(QMainWindow, Ui_MainWindow):
                    eval('0x' + dealStr[48:50]),
                    eval('0x' + dealStr[51:53]),
                    eval('0x' + dealStr[54:56]),
-                   eval('0x' + dealStr[57:59])]
+                   eval('0x' + dealStr[57:59]),
+                   eval('0x' + dealStr[60:62]),
+                   eval('0x' + dealStr[63:65]),
+                   eval('0x' + dealStr[66:68]),
+                   eval('0x' + dealStr[69:71]),
+                   eval('0x' + dealStr[72:74]),
+                   eval('0x' + dealStr[75:77]),
+                   eval('0x' + dealStr[78:80]),
+                   eval('0x' + dealStr[81:83]),
+                   eval('0x' + dealStr[84:86]),
+                   eval('0x' + dealStr[87:89]),
+                   eval('0x' + dealStr[90:92]),
+                   eval('0x' + dealStr[93:95])]
+
             t_12 = None
             for i in range(len(lit1)):
                 if i:
                     t_12 ^= lit1[i]
                 else:
                     t_12 = lit1[i] ^ 0
-            print(dealStr[len(dealStr)-6:len(dealStr)-4])
+            print('17777777777777777777777777777777777777')
+            print(dealStr[len(dealStr) - 39:len(dealStr) - 37])
+            print(dealStr[len(dealStr) - 42:len(dealStr) - 40])
+            print(len(dealStr))
+            # print(dealStr[len(dealStr)-6:len(dealStr)-4])
             print(hex(t_12))
 
             # if dealStr[:5] == '55 aa' and dealStr[len(dealStr)-3:len(dealStr)-1] == 'f0' and len(dealStr) == 66 and hex(t_12)[2:].zfill(2) == dealStr[len(dealStr)-6:len(dealStr)-4]:
-            if dealStr[:5] == '55 aa' and dealStr[len(dealStr) - 3:len(dealStr) - 1] == 'f0' and len(
-                    dealStr) == 66:
+            if dealStr[:5] == '55 aa' and dealStr[len(dealStr)-3:len(dealStr)-1] == 'f0' and len(dealStr) == 102 and hex(t_12)[2:].zfill(2) == dealStr[len(dealStr)-6:len(dealStr)-4]:
                 dealStr_new = dealStr.replace(' ', '')  #去除首尾空格
                 print(dealStr_new)
                 print(type(dealStr_new))
@@ -447,24 +482,47 @@ class Pyqt5Serial(QMainWindow, Ui_MainWindow):
                 recv6_er_new = function_file.data_receive_process(recv6, 24, 1000)
                 r_6 = '%.04f'%(round(recv6_er_new, 4))
                 self.lineEdit_6.setText(str(r_6))
+###########################################################
+                recv7 = '0x' + str(dealStr_new[40:44])  # 俯仰角度
+                recv7_er_new = function_file.data_receive_process(recv7, 16, 1241)
+                r_7 = '%.04f' % (round(recv7_er_new, 4))
+
+                recv8 = '0x' + str(dealStr_new[44:48])  # 俯仰角度
+                recv8_er_new = function_file.data_receive_process(recv8, 16, 1241)
+                r_8 = '%.04f' % (round(recv8_er_new, 4))
+
+                recv9 = '0x' + str(dealStr_new[48:52])  # 俯仰角度
+                recv9_er_new = function_file.data_receive_process(recv9, 16, 1241)
+                r_9 = '%.04f' % (round(recv9_er_new, 4))
+##############################################################
+                recv10 = '0x' + str(dealStr_new[52:56])  # 俯仰角度
+                recv10_er_new = function_file.data_receive_process(recv10, 16, 1241)
+                r_10 = '%.04f' % (round(recv10_er_new, 4))
+
+                recv11 = '0x' + str(dealStr_new[56:60])  # 俯仰角度
+                recv11_er_new = function_file.data_receive_process(recv11, 16, 1241)
+                r_11 = '%.04f' % (round(recv11_er_new, 4))
+
+                recv12 = '0x' + str(dealStr_new[60:64])  # 俯仰角度
+                recv12_er_new = function_file.data_receive_process(recv12, 16, 1241)
+                r_12 = '%.04f' % (round(recv12_er_new, 4))
+                # self.lineEdit_6.setText(str(r_6))
                 # data_s[0] = r_3
                 # data_s[1] = r_4
                 # data_s[2] = r_5
                 # data_s[3] = r_6
                 # print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
                 # print(data_s)
+                ##  data1
                 self.data1[:-1] = self.data1[1:]
-
-                # self.data1[-1] = np.random.normal()
                 self.data1[-1] = r_3
-                print('bbbbbbbbbbbbbbbbbbbbbbbbbbb')
-                print(self.data1)
+
                 # 数据填充到绘制曲线中
                 self.curve1.setData(self.data1)
-                # self.curve1.setData(self.data3)
                 # x 轴记录点
                 self.ptr1 += 1
                 # 重新设定 x 相关的坐标原点
+
                 self.curve1.setPos(self.ptr1, 0)
                 # return data_s
 
@@ -500,6 +558,53 @@ class Pyqt5Serial(QMainWindow, Ui_MainWindow):
                 self.ptr4 += 1
                 # 重新设定 x 相关的坐标原点
                 self.curve4.setPos(self.ptr4, 0)
+
+                # self.plotWidget1.plot(self.data1, name="mode2")
+                # self.plotWidget1.setPos(self.ptr4, 0)
+                # self.graphicsView_1.plot(self.data3, name="mode3")
+
+                # self.curve5.setData(self.data1)
+                # self.curve5.setPos(self.ptr4, 0)
+                # self.curve5.setData(self.data3)
+                self.data5[:-1] = self.data5[1:]
+                self.data5[-1] = r_7
+                self.data6[:-1] = self.data6[1:]
+                self.data6[-1] = r_8
+                self.data7[:-1] = self.data7[1:]
+                self.data7[-1] = r_9
+                self.curve5.setData(self.data5)
+                self.curve6.setData(self.data6)
+                self.curve7.setData(self.data7)
+                self.ptr5 += 1
+                self.curve5.setPos(self.ptr5, 0)
+                self.ptr6 += 1
+                self.curve6.setPos(self.ptr6, 0)
+                self.ptr7 += 1
+                self.curve7.setPos(self.ptr7, 0)
+                # self.curve5.setData(self.data6)
+                # self.curve5.setData(self.data3, name="mode7")
+
+                self.data8[:-1] = self.data8[1:]
+                self.data8[-1] = r_10
+                self.data9[:-1] = self.data9[1:]
+                self.data9[-1] = r_11
+                self.data10[:-1] = self.data10[1:]
+                self.data10[-1] = r_12
+                self.curve8.setData(self.data8)
+                self.curve9.setData(self.data9)
+                self.curve10.setData(self.data10)
+                self.ptr8 += 1
+                self.curve8.setPos(self.ptr8, 0)
+                self.ptr9 += 1
+                self.curve9.setPos(self.ptr9, 0)
+                self.ptr10 += 1
+                self.curve10.setPos(self.ptr10, 0)
+                # self.data6[:-1] = self.data6[1:]
+                # # self.data1[-1] = np.random.normal()
+                # self.data6[-1] = r_8
+                # self.curve5.setData(self.data6)
+                # # self.curve5.setData(self.data3, name="mode7")
+
 
 
             else:
